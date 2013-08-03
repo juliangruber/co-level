@@ -1,0 +1,36 @@
+{
+  "name": "level-co",
+  "description": "levelup wrappers for 'co'",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/juliangruber/level-co.git"
+  },
+  "homepage": "https://github.com/juliangruber/level-co",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --harmony-generators test.js"
+  },
+  "dependencies": {
+    "levelup": "~0.12.0"
+  },
+  "devDependencies": {
+    "tape": "~1.0.4",
+    "co": "~1.4.1",
+    "memdown": "~0.3.0"
+  },
+  "keywords": [
+    "levelup",
+    "leveldb",
+    "level",
+    "co",
+    "generators",
+    "coroutines"
+  ],
+  "author": {
+    "name": "Julian Gruber",
+    "email": "mail@juliangruber.com",
+    "url": "http://juliangruber.com"
+  },
+  "license": "MIT"
+}
