@@ -7,6 +7,8 @@
 Currently you have to pass the flag `--harmony-generators` to node and need at
 least version `0.11.0`.
 
+[![build status](https://secure.travis-ci.org/juliangruber/level-co.png)](http://travis-ci.org/juliangruber/level-co)
+
 ## Usage
 
 ```js
