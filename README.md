@@ -32,6 +32,19 @@ co(function *() {
 });
 ```
 
+## API
+
+### levelco(path, opts)
+
+Yields a leveldb.
+
+### levelco.deferred(path, opts)
+
+Returns a leveldb.
+
+This is useful when you want to create a `level-co` instance outside a
+generator function.
+
 ## Installation
 
 With [npm](https://npmjs.org) do:

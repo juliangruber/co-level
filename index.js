@@ -36,3 +36,12 @@ module.exports = function () {
     levelup.apply(this, args);
   };
 };
+
+module.exports.deferred = function () {
+  var db = levelup.apply(null, arguments);
+  methods.forEach(function (name) {
+    db[name] = wrap(db[name], db);
+  });
+  return db;
+}
+
