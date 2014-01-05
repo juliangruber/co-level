@@ -1,4 +1,4 @@
-var levelco = require('..');
+var levelco = require('./');
 var memdown = function (l) { return new (require('memdown'))(l) };
 var co = require('co');
 
@@ -13,4 +13,4 @@ co(function *() {
 
   var res = yield db.get('bar');
   console.log('bar -> %s', res);
-});
+})();

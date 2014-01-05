@@ -15,9 +15,9 @@
     "levelup": "~0.18.2"
   },
   "devDependencies": {
-    "tape": "~1.0.4",
-    "co": "~1.4.1",
-    "memdown": "~0.3.0"
+    "tape": "~2.3.2",
+    "co": "~3.0.2",
+    "memdown": "~0.6.0"
   },
   "keywords": [
     "levelup",
