@@ -29,7 +29,7 @@ co(function *() {
   console.log('bar -> %s', res);
 
   // whoop whoop
-});
+})();
 ```
 
 ## API

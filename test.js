@@ -17,7 +17,7 @@ test('co', function (t) {
 
     var res = yield db.get('bar');
     t.equal(res, 'baz');
-  });
+  })();
 });
 
 test('deferred constructor', function (t) {
@@ -34,6 +34,6 @@ test('deferred constructor', function (t) {
 
     var res = yield db.get('bar');
     t.equal(res, 'baz');
-  });
+  })();
 });
 
