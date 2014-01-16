@@ -1,33 +1,55 @@
-var test = require('gap');
+var co = require('co');
 var wrap = require('./');
 var MemDB = require('memdb');
 var Stream = require('stream');
+var assert = require('assert');
 
-test('co-level', function*(t) {
-  var db = wrap(MemDB());
-  var res;
+var db = wrap(MemDB());
 
-  yield db.put('foo', 'bar');
-  yield db.put('bar', 'baz');
-
-  res = yield db.get('foo');
-  t.equal(res, 'bar');
-
-  res = yield db.get('bar');
-  t.equal(res, 'baz');
+describe('co-level', function(){
+  it('should put and get', function(done){
+    co(function*(){
+      yield db.put('foo', 'bar');
+      yield db.put('bar', 'baz');
+      var res = yield db.get('foo');
+      assert.equal(res, 'bar');
+    })(done);
+  });
   
-  yield db.batch([
-    { type: 'put', key: 'yolo', value: 'swag' }
-  ]);
+  it('should del', function(done){
+    co(function*(){
+      yield db.put('key', 'value');
+      yield db.del('key');
+      try {
+        yield db.get('key');
+        throw new Error('did not throw');
+      } catch (e) {}
+    })(done);
+  });
   
-  res = yield db.get('yolo');
-  t.equal(res, 'swag');
+  it('should support array batch', function(done){
+    co(function*(){
+      yield db.batch([
+        { type: 'put', key: 'yolo', value: 'swag' }
+      ]);
+      
+      res = yield db.get('yolo');
+      assert.equal(res, 'swag');
+    })(done);
+  });
   
-  yield db.del('yolo');
-  try {
-    yield db.get('yolo');
-    throw new Error('did not throw');
-  } catch (e) {}
+  it('should support chained batch', function(done){
+    co(function*(){
+      yield db.batch()
+        .put('swag', 'yolo')
+        .write();
+      
+      res = yield db.get('swag');
+      assert.equal(res, 'yolo');
+    })(done);
+  });
   
-  t.ok(db.createReadStream() instanceof Stream);
+  it('should create streams', function(){
+    assert(db.createReadStream() instanceof Stream);
+  });
 });

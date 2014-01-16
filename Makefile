@@ -1,6 +1,10 @@
 
 test:
-	@./node_modules/.bin/gap test.js
-	
+	@mocha \
+		--reporter spec \
+		--harmony	
+
 example:
 	@node --harmony example
+
+.PHONY: test example

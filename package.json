@@ -15,7 +15,8 @@
   },
   "devDependencies": {
     "memdb": "~0.1.0",
-    "gap": "0.0.0"
+    "co": "~3.0.2",
+    "mocha": "~1.17.0"
   },
   "keywords": [
     "levelup",
