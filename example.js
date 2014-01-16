@@ -1,10 +1,10 @@
-var levelco = require('./');
-var memdown = function (l) { return new (require('memdown'))(l) };
+var MemDB = require('memdb');
+var wrap = require('./');
 var co = require('co');
 
-co(function *() {
-  var db = yield levelco('db', { db: memdown });
+var db = wrap(MemDB());
 
+co(function *() {
   yield db.put('foo', 'bar');
   yield db.put('bar', 'baz');
 

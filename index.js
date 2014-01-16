@@ -1,47 +1,65 @@
-var levelup = require('levelup');
 
-function wrap (fn, ctx) {
-  return function () {
-    var args = [].slice.call(arguments);
-    return function (done) {
-      args.push(done);
-      fn.apply(ctx, args);
-    };
-  };
-}
+/**
+ * Module dependencies.
+ */
 
-var methods = [
+var thunk = require('thunkify');
+
+/**
+ * Methods to wrap.
+ */
+
+var wrap = [
   'open',
   'close',
   'put',
   'get',
   'del',
-  'batch'
 ];
 
-module.exports = function () {
-  var args = [].slice.call(arguments);
+/**
+ * Methods to copy.
+ */
 
-  return function (done) {
-    args.push(function (err, db) {
-      if (err) return done(err);
+var copy = [
+  'readStream',
+  'createReadStream',
+  'writeStream',
+  'createWriteStream',
+  'keyStream',
+  'createKeyStream',
+  'valueStream',
+  'createValueStream'
+];
 
-      methods.forEach(function (name) {
-        db[name] = wrap(db[name], db);
-      });
+/**
+ * Create a wrapped `db`.
+ *
+ * @param {LevelUp} db
+ * @return {Object}
+ * @api public
+ */
 
-      done(null, db);
-    });
+module.exports = function(db){
+  var ret = {};
+  
+  var arrayBatch = thunk(db.batch.bind(db));
+  
+  ret.batch = function(ops) {
+    if (ops) return arrayBatch(ops);
 
-    levelup.apply(this, args);
+    var batch = db.batch();
+    batch.write = thunk(batch.write);
+    return batch;
   };
-};
-
-module.exports.deferred = function () {
-  var db = levelup.apply(null, arguments);
-  methods.forEach(function (name) {
-    db[name] = wrap(db[name], db);
+  
+  copy.forEach(function(method){
+    ret[method] = db[method].bind(db);
   });
-  return db;
-}
-
+  
+  wrap.forEach(function(method){
+    ret[method] = thunk(db[method].bind(db));
+  });
+  
+  return ret;
+};

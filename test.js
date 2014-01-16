@@ -1,39 +1,33 @@
-var test = require('tape');
-var levelco = require('./');
-var memdown = function (l) { return new (require('memdown'))(l) };
-var co = require('co');
+var test = require('gap');
+var wrap = require('./');
+var MemDB = require('memdb');
+var Stream = require('stream');
 
-test('co', function (t) {
-  t.plan(2);
+test('co-level', function*(t) {
+  var db = wrap(MemDB());
+  var res;
 
-  co(function *() {
-    var db = yield levelco('db', { db: memdown });
+  yield db.put('foo', 'bar');
+  yield db.put('bar', 'baz');
 
-    yield db.put('foo', 'bar');
-    yield db.put('bar', 'baz');
+  res = yield db.get('foo');
+  t.equal(res, 'bar');
 
-    var res = yield db.get('foo');
-    t.equal(res, 'bar');
-
-    var res = yield db.get('bar');
-    t.equal(res, 'baz');
-  })();
+  res = yield db.get('bar');
+  t.equal(res, 'baz');
+  
+  yield db.batch([
+    { type: 'put', key: 'yolo', value: 'swag' }
+  ]);
+  
+  res = yield db.get('yolo');
+  t.equal(res, 'swag');
+  
+  yield db.del('yolo');
+  try {
+    yield db.get('yolo');
+    throw new Error('did not throw');
+  } catch (e) {}
+  
+  t.ok(db.createReadStream() instanceof Stream);
 });
-
-test('deferred constructor', function (t) {
-  t.plan(2);
-
-  var db = levelco.deferred('db', { db: memdown });
-
-  co(function *() {
-    yield db.put('foo', 'bar');
-    yield db.put('bar', 'baz');
-
-    var res = yield db.get('foo');
-    t.equal(res, 'bar');
-
-    var res = yield db.get('bar');
-    t.equal(res, 'baz');
-  })();
-});
-

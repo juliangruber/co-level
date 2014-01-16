@@ -1,24 +1,24 @@
 
-# level-co
+# co-level
 
 [LevelUP](https://github.com/rvagg/node-levelup) wrappers for
 [co](https://github.com/visionmedia/co).
 
-Currently you have to pass the flag `--harmony-generators` to node and need at
+Currently you have to pass the flag `--harmony` to node and need at
 least version `0.11.0`.
 
-[![build status](https://secure.travis-ci.org/juliangruber/level-co.png)](http://travis-ci.org/juliangruber/level-co)
+[![build status](https://secure.travis-ci.org/juliangruber/co-level.png)](http://travis-ci.org/juliangruber/co-level)
 
 ## Usage
 
 ```js
-var levelco = require('level-co');
-var leveldown = function (l) { return new (require('leveldown'))(l) };
+var level = require('level');
+var wrap = require('co-level');
 var co = require('co');
 
-co(function *() {
-  var db = yield levelco('db', { db: leveldown });
+var db = wrap(level('db'));
 
+co(function *() {
   yield db.put('foo', 'bar');
   yield db.put('bar', 'baz');
 
@@ -34,23 +34,16 @@ co(function *() {
 
 ## API
 
-### levelco(path, opts)
+### wrap(db)
 
-Yields a leveldb.
-
-### levelco.deferred(path, opts)
-
-Returns a leveldb.
-
-This is useful when you want to create a `level-co` instance outside a
-generator function.
+Return a wrapped leveldb.
 
 ## Installation
 
 With [npm](https://npmjs.org) do:
 
 ```bash
-npm install level-co
+npm install co-level
 ```
 
 ## License

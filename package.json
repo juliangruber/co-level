@@ -1,23 +1,21 @@
 {
-  "name": "level-co",
+  "name": "co-level",
   "description": "levelup wrappers for 'co'",
   "version": "0.2.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/juliangruber/level-co.git"
+    "url": "git://github.com/juliangruber/co-level.git"
   },
-  "homepage": "https://github.com/juliangruber/level-co",
-  "main": "index.js",
+  "homepage": "https://github.com/juliangruber/co-level",
   "scripts": {
-    "test": "node --harmony-generators test.js"
+    "test": "make test"
   },
   "dependencies": {
-    "levelup": "~0.18.2"
+    "thunkify": "0.0.1"
   },
   "devDependencies": {
-    "tape": "~2.3.2",
-    "co": "~3.0.2",
-    "memdown": "~0.6.0"
+    "memdb": "~0.1.0",
+    "gap": "0.0.0"
   },
   "keywords": [
     "levelup",
