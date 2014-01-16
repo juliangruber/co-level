@@ -54,10 +54,12 @@ module.exports = function(db){
   };
   
   copy.forEach(function(method){
+    if (!db[method]) return;
     ret[method] = db[method].bind(db);
   });
   
   wrap.forEach(function(method){
+    if (!db[method]) return;
     ret[method] = thunk(db[method].bind(db));
   });
   
