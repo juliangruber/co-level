@@ -11,7 +11,7 @@
     "test": "make test"
   },
   "dependencies": {
-    "thunkify": "0.0.1"
+    "yieldly": "0.0.1"
   },
   "devDependencies": {
     "memdb": "~0.1.0",
