@@ -1,67 +1,48 @@
-
 /**
- * Module dependencies.
+ * Module Dependencies
  */
 
-var thunk = require('thunkify');
+var yieldly = require('yieldly');
 
 /**
- * Methods to wrap.
+ * Export `level`
+ */
+
+module.exports = level;
+
+/**
+ * Methods to wrap
  */
 
 var wrap = [
+  'approximateSize',
   'open',
   'close',
   'put',
   'get',
-  'del',
+  'del'
 ];
 
 /**
- * Methods to copy.
+ * Initialize `level`
  */
 
-var copy = [
-  'readStream',
-  'createReadStream',
-  'writeStream',
-  'createWriteStream',
-  'keyStream',
-  'createKeyStream',
-  'valueStream',
-  'createValueStream'
-];
+function level(db) {
+  var batch = db.batch;
 
-/**
- * Create a wrapped `db`.
- *
- * @param {LevelUp} db
- * @return {Object}
- * @api public
- */
+  // wrap batch differently
+  db.batch = function(ops) {
+    if (ops) return yieldly(batch).call(db, ops);
+    var b = batch.call(db);
+    b.write = yieldly(b.write);
+    return b;
+  }
 
-module.exports = function(db){
-  var ret = {};
-  
-  var arrayBatch = thunk(db.batch.bind(db));
-  
-  ret.batch = function(ops) {
-    if (ops) return arrayBatch(ops);
-
-    var batch = db.batch();
-    batch.write = thunk(batch.write);
-    return batch;
-  };
-  
-  copy.forEach(function(method){
+  // wrap functions
+  wrap.forEach(function(method) {
     if (!db[method]) return;
-    ret[method] = db[method].bind(db);
+    db[method] = yieldly(db[method]);
   });
-  
-  wrap.forEach(function(method){
-    if (!db[method]) return;
-    ret[method] = thunk(db[method].bind(db));
-  });
-  
-  return ret;
-};
+
+  return db;
+}
